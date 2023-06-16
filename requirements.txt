@@ -12,3 +12,7 @@ onnxruntime-gpu
 huggingface_hub
 segment_anything
 requests
+diffusers
+controlnet_aux
+transformers
+accelerate
