@@ -5,7 +5,7 @@ sys.path.append("./undercoat/")
 from undercoat.sd_model import get_cn_pipeleine, get_cn_detector, generate
 from undercoat.flat import segment, get_line_img, get_flat_img
 from undercoat.convertor import pil2cv, cv2pil
-from undercoat.utils import save_psd
+from undercoat.utils import save_psd, load_seg_model
 
 import cv2
 from pytoshop.enums import BlendMode
@@ -18,6 +18,9 @@ path = os.getcwd()
 output_dir = f"{path}/output"
 input_dir = f"{path}/input"
 model_dir = f"{path}/segment_model"
+
+load_seg_model(model_dir)
+
 class webui:
     def __init__(self):
         self.demo = gr.Blocks()
