@@ -93,7 +93,7 @@ class webui:
                     
             submit.click(
                 self.undercoat, 
-                inputs=[input_image, pos_prompt, neg_prompt], 
+                inputs=[input_image, pos_prompt, neg_prompt, bg_type], 
                 outputs=[output_0, output_1, output_file]
             )
 
