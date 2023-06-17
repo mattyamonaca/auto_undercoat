@@ -25,14 +25,24 @@ class webui:
     def __init__(self):
         self.demo = gr.Blocks()
 
-    def undercoat(self, input_image, pos_prompt, neg_prompt):
+    def undercoat(self, input_image, pos_prompt, neg_prompt, bg_type):
         image = pil2cv(input_image)
         image = cv2.cvtColor(image, cv2.COLOR_BGR2RGBA)
+        if bg_type == "alpha":
+            line_img = image
+            index = np.where(image[:, :, 3] == 0)
+            image[index] = [255, 255, 255, 255]
+        else:
+            line_img = get_line_img(image)
+
         pipe = get_cn_pipeleine()
         detectors = get_cn_detector(input_image)
+            
         gen_image = generate(pipe, detectors, pos_prompt, neg_prompt)
 
-        line_img = get_line_img(image)
+        comp_line = cv2.resize(line_img, (gen_img.shape[1], gen_img.shape[0]))
+        gen_image = Image.alpha_composite(gen_image, line_img)
+
         masks = segment(model_dir, gen_image)
         output, layer_list = get_flat_img(gen_image, masks)
         layer_list.append(line_img)
@@ -43,9 +53,6 @@ class webui:
             layers.append(cv2.resize(layer, (line_img.shape[1], line_img.shape[0])))
 
         output = cv2.resize(output, (line_img.shape[1], line_img.shape[0]))
-        
-        print(output.shape)
-        print(line_img.shape)
 
         filename = save_psd(
             line_img,
@@ -68,7 +75,9 @@ class webui:
         with self.demo:
             with gr.Row():
                 with gr.Column():
-                    input_image = gr.Image(type="pil")                        
+                    input_image = gr.Image(type="pil")
+                    bg_type = gr.Dropdown(["alpha", "white"], value = "alpha", label="bg_type", show_label=True)
+
                     pos_prompt = gr.Textbox(max_lines=1000, label="positive prompt")                    
                     neg_prompt = gr.Textbox(max_lines=1000, label="negative prompt")
 
