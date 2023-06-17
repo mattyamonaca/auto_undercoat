@@ -37,6 +37,8 @@ class webui:
 
         pipe = get_cn_pipeleine()
         detectors = get_cn_detector(input_image)
+
+        print(input_image)
             
         gen_image = generate(pipe, detectors, pos_prompt, neg_prompt)
 

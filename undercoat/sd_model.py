@@ -13,7 +13,7 @@ def get_cn_pipeleine():
     ]
 
     pipe = StableDiffusionControlNetPipeline.from_pretrained(
-        "yuk/fuyuko-waifu-diffusion", controlnet=controlnets, torch_dtype=torch.float16
+        "AIARTCHAN/AbyssMapleVer3", controlnet=controlnets, torch_dtype=torch.float16
     )
     pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)    
 
@@ -28,7 +28,11 @@ def get_cn_pipeleine():
 def get_cn_detector(image):
     lineart_anime = LineartAnimeDetector.from_pretrained("lllyasviel/Annotators")
     canny = CannyDetector()
-    detectors = [lineart_anime(image), canny(image)]
+    lineart_anime_img = lineart_anime(image)
+    canny_img = canny(image)
+    canny_img = canny_img.resize((lineart_anime(image).width, lineart_anime(image).height))
+    detectors = [lineart_anime_img, canny_img]
+    print(detectors)
     return detectors
 
 def generate(pipe, detectors, prompt, negative_prompt):
@@ -37,9 +41,10 @@ def generate(pipe, detectors, prompt, negative_prompt):
     prompt = default_pos + prompt 
     negative_prompt = default_neg + negative_prompt 
     generator = torch.Generator(device)
+    print(type(pipe))
     image = pipe(
-                prompt,
-                detectors,
+                prompt=prompt,
+                image=detectors,
                 num_inference_steps=20,
                 generator=generator,
                 negative_prompt=negative_prompt,
