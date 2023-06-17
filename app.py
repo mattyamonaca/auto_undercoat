@@ -32,13 +32,12 @@ class webui:
             line_img = image
             index = np.where(image[:, :, 3] == 0)
             image[index] = [255, 255, 255, 255]
+            input_image = cv2pil(image)
         else:
             line_img = get_line_img(image)
 
         pipe = get_cn_pipeleine()
         detectors = get_cn_detector(input_image)
-
-        print(input_image)
             
         gen_image = generate(pipe, detectors, pos_prompt, neg_prompt)
 
