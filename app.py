@@ -27,9 +27,10 @@ class webui:
 
     def undercoat(self, input_image, pos_prompt, neg_prompt, bg_type):
         image = pil2cv(input_image)
-        image = cv2.cvtColor(image, cv2.COLOR_BGR2RGBA)
+        image = cv2.cvtColor(image, cv2.COLOR_BGRA2RGBA)
         if bg_type == "alpha":
-            line_img = image
+            line_img = pil2cv(input_image)
+            line_img = cv2.cvtColor(line_img, cv2.COLOR_BGRA2RGBA)
             index = np.where(image[:, :, 3] == 0)
             image[index] = [255, 255, 255, 255]
             input_image = cv2pil(image)
@@ -40,13 +41,6 @@ class webui:
         detectors = get_cn_detector(input_image)
             
         gen_image = generate(pipe, detectors, pos_prompt, neg_prompt)
-
-        comp_line = cv2.resize(line_img, (pil2cv(gen_image).shape[1], pil2cv(gen_image).shape[0]))
-        
-        gen_image.putalpha(255)
-        gen_image = Image.alpha_composite(gen_image, cv2pil(comp_line))
-        gen_image = gen_image.convert("RGB")
-        
 
         masks = segment(model_dir, pil2cv(gen_image))
         output, layer_list = get_flat_img(gen_image, masks)
@@ -74,6 +68,7 @@ class webui:
         output = pil2cv(output)
 
         return output, layers, filename
+
 
 
     def launch(self, share):
