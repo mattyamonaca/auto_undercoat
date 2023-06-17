@@ -13,7 +13,7 @@ def get_cn_pipeleine():
     ]
 
     pipe = StableDiffusionControlNetPipeline.from_pretrained(
-        "AIARTCHAN/AbyssMapleVer3", controlnet=controlnets, torch_dtype=torch.float16
+        "yuk/fuyuko-waifu-diffusion", controlnet=controlnets, torch_dtype=torch.float16
     )
     pipe.scheduler = UniPCMultistepScheduler.from_config(pipe.scheduler.config)    
 

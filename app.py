@@ -40,10 +40,14 @@ class webui:
             
         gen_image = generate(pipe, detectors, pos_prompt, neg_prompt)
 
-        comp_line = cv2.resize(line_img, (gen_img.shape[1], gen_img.shape[0]))
-        gen_image = Image.alpha_composite(gen_image, line_img)
+        comp_line = cv2.resize(line_img, (pil2cv(gen_image).shape[1], pil2cv(gen_image).shape[0]))
+        
+        gen_image.putalpha(255)
+        gen_image = Image.alpha_composite(gen_image, cv2pil(comp_line))
+        gen_image = gen_image.convert("RGB")
+        
 
-        masks = segment(model_dir, gen_image)
+        masks = segment(model_dir, pil2cv(gen_image))
         output, layer_list = get_flat_img(gen_image, masks)
         layer_list.append(line_img)
 
