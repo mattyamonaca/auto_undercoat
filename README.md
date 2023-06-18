@@ -19,6 +19,20 @@
 4. Click Ruuning on public URL.
 
  ![スクリーンショット 2023-06-18 090639](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/11089876-40bf-4308-ac08-f9ff0227d9ea)
+ 
+# Local Install
+## Windows Installation
+### Required Dependencies
+3.10.X > Python > 3.10.8 and Git
+
+### install Step
+1. ``` 
+git clone https://github.com/mattyamonaca/layerdivider
+```
+
+2. run `install.ps1` first time use, waiting for installation to complete.
+3. run `run_gui.ps1` to open local gui.
+4. open website localhost:port to use(The default is localhost:7860). 
 
 # Usage
 1. Image Select.
