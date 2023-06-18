@@ -26,8 +26,9 @@
 3.10.X > Python > 3.10.8 and Git
 
 ### install Step
-1. ``` 
-git clone https://github.com/mattyamonaca/layerdivider
+1. 
+```
+git clone https://github.com/mattyamonaca/auto_undercoat
 ```
 
 2. run `install.ps1` first time use, waiting for installation to complete.
