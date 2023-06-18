@@ -16,4 +16,7 @@
    
 ![スクリーンショット 2023-06-18 090400](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/27187080-dd32-4acd-8a38-98085aa36704)
 
-5. 
+4. Click Ruuning on public URL
+
+ ![スクリーンショット 2023-06-18 090639](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/11089876-40bf-4308-ac08-f9ff0227d9ea)
+
