@@ -23,12 +23,25 @@
 # Usage
 1. Image Select.
 Select and upload the image you want to undercoat.
-下塗りしたい画像を選択してアップロード.
+下塗りしたい画像を選択してアップロード。
+
+![スクリーンショット 2023-06-18 082559](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/f72c85ce-902c-4264-870a-09830ad270e9)
+
 
 2. Select bg_type.
 Select "alpha" for a transparent background or "white" for a white background.
 背景が透明なら「alpha」を、白色なら「white」を選択してください。
 
-3. Click 「Create PSD」button.
+![スクリーンショット 2023-06-18 082758](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/55afc169-805f-42cb-9c01-a1feb2a4865b)
+
+
+3. Input Text Prompt.
+Enter the color or image you wish to specify and the words that describe it.
+指定したい塗の色や、入力した画像を説明する単語・文章をプロンプトとして入力してください。
+（何も指定しなくても大丈夫です）
+
+![スクリーンショット 2023-06-18 083152](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/49ded23d-ab47-46b0-a056-5179fa5841ba)
+
+5. Click 「Create PSD」button.
 
 
