@@ -16,7 +16,19 @@
    
 ![スクリーンショット 2023-06-18 090400](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/27187080-dd32-4acd-8a38-98085aa36704)
 
-4. Click Ruuning on public URL
+4. Click Ruuning on public URL.
 
  ![スクリーンショット 2023-06-18 090639](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/11089876-40bf-4308-ac08-f9ff0227d9ea)
+
+# Usage
+1. Image Select.
+Select and upload the image you want to undercoat.
+下塗りしたい画像を選択してアップロード.
+
+2. Select bg_type.
+Select "alpha" for a transparent background or "white" for a white background.
+背景が透明なら「alpha」を、白色なら「white」を選択してください。
+
+3. Click 「Create PSD」button.
+
 
