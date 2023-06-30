@@ -13,7 +13,7 @@ huggingface_hub
 segment_anything
 requests
 diffusers==0.17.0
-gradio==3.28.1
+gradio==3.16.2
 gradio_client==0.2.5
 controlnet_aux
 transformers
