@@ -2,10 +2,9 @@ from segment_anything import sam_model_registry, SamAutomaticMaskGenerator, SamP
 import numpy as np
 import copy
 from PIL import Image
-import pickle
 import torch
 import cv2
-from undercoat.convertor import rgba2df, mask2df, cv2pil, pil2cv, df2rgba
+from undercoat.convertor import rgba2df, mask2df, pil2cv, df2rgba
 from tqdm import tqdm
 
 

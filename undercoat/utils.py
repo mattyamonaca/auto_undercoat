@@ -1,17 +1,9 @@
-import numpy as np
-import matplotlib.pyplot as plt
-
 from pytoshop import layers
-from pytoshop.user import nested_layers
 import pytoshop
 
-from PIL import Image
-
-import random, string
+import random
+import string
 import os
-
-import psd_tools
-from psd_tools.psd import PSD
 
 import requests
 from tqdm import tqdm

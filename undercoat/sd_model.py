@@ -1,8 +1,6 @@
 from diffusers import StableDiffusionControlNetPipeline, ControlNetModel, UniPCMultistepScheduler
 from controlnet_aux import OpenposeDetector, LineartAnimeDetector, CannyDetector
 import torch
-from PIL import Image
-import numpy as np
 
 device = "cuda"
 

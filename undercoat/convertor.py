@@ -1,6 +1,4 @@
-import cv2
 import pandas as pd
-from sklearn.cluster import KMeans
 import numpy as np
 from skimage import color 
 from PIL import Image
