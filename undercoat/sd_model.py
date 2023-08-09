@@ -6,7 +6,7 @@ import numpy as np
 
 device = "cuda"
 
-def get_cn_pipeleine():
+def get_cn_pipeline():
     controlnets = [
         ControlNetModel.from_pretrained("lllyasviel/control_v11p_sd15s2_lineart_anime", torch_dtype=torch.float16),
         ControlNetModel.from_pretrained("lllyasviel/sd-controlnet-canny", torch_dtype=torch.float16)

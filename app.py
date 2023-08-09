@@ -2,7 +2,7 @@ import gradio as gr
 import sys
 sys.path.append("./undercoat/")
 
-from undercoat.sd_model import get_cn_pipeleine, get_cn_detector, generate
+from undercoat.sd_model import get_cn_pipeline, get_cn_detector, generate
 from undercoat.flat import segment, get_line_img, get_flat_img
 from undercoat.convertor import pil2cv, cv2pil
 from undercoat.utils import save_psd, load_seg_model
@@ -37,7 +37,7 @@ class webui:
         else:
             line_img = get_line_img(image)
 
-        pipe = get_cn_pipeleine()
+        pipe = get_cn_pipeline()
         detectors = get_cn_detector(input_image)
             
         gen_image = generate(pipe, detectors, pos_prompt, neg_prompt)
