@@ -1,62 +1,39 @@
 # auto_undercoat
 "auto_undercoat" is an automatic undercoat and layer splitter
 
+auto_undercoatは、入力された線画に対してフラットな色付け（下塗り）を行うツールです。
+また、下塗りの色情報に基づいて、自動でレイヤー分けを行い透過PNGで出力することが可能です。
+
 ![スクリーンショット 2023-06-18 083200](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/b87f9a90-ca81-4947-a558-9bc7fac5071c)
 
 ![スクリーンショット 2023-06-18 083356](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/f9745298-e428-4ff7-a3ac-e9c05cee7e25)
 
-# Install
-1. Click [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/mattyamonaca/auto_undercoat/blob/main/launch_app.ipynb).
-   
-2. Select GPU Runtime.
- ![スクリーンショット 2023-06-18 090105](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/461b6208-3af6-43f4-a7de-2291cf83f5ad)
-![スクリーンショット 2023-06-18 085831](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/4f6b6d62-6e63-4e25-8486-7ce604ab17b8)
 
-3. Select 「Run All Cells」.
-   
-![スクリーンショット 2023-06-18 090400](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/27187080-dd32-4acd-8a38-98085aa36704)
-
-4. Click Ruuning on public URL.
-
- ![スクリーンショット 2023-06-18 090639](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/11089876-40bf-4308-ac08-f9ff0227d9ea)
- 
-# Local Install
-## Windows Installation
-### Required Dependencies
-3.10.X > Python > 3.10.8 and Git
-
-### install Step
-1. 
+# Installation
 ```
-git clone https://github.com/mattyamonaca/auto_undercoat
+git clone https://github.com/wasanbonplan/auto_undercoat_proto.git
+cd starline
+conda create -n auto_undercoat python=3.10
+conda activate auto_undercoat
+conda install pytorch torchvision pytorch-cuda=12.1 -c pytorch -c nvidia
+pip install -r requirements.txt
 ```
-
-2. run `install.ps1` first time use, waiting for installation to complete.
-3. run `run_gui.ps1` to open local gui.
-4. open website localhost:port to use(The default is localhost:7860). 
 
 # Usage
 1. Image Select.
 Select and upload the image you want to undercoat.
-下塗りしたい画像を選択してアップロード。
+下塗りしたい線画画像(背景は透過されている必要があります)を選択してアップロード。
 
-![スクリーンショット 2023-06-18 082559](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/f72c85ce-902c-4264-870a-09830ad270e9)
-
-
-2. Select bg_type.
-Select "alpha" for a transparent background or "white" for a white background.
-背景が透明なら「alpha」を、白色なら「white」を選択してください。
-
-![スクリーンショット 2023-06-18 082758](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/55afc169-805f-42cb-9c01-a1feb2a4865b)
+![image](https://github.com/wasanbonplan/auto_undercoat_proto/assets/48423148/9911d330-a561-4bfd-aaf8-d01c7e9cc292)
 
 
-3. Input Text Prompt.
+2. Input Text Prompt.
 Enter the color or image you wish to specify and the words that describe it.
 指定したい塗の色や、入力した画像を説明する単語・文章をプロンプトとして入力してください。
-（何も指定しなくても大丈夫です）
 
 ![スクリーンショット 2023-06-18 083152](https://github.com/mattyamonaca/auto_undercoat/assets/48423148/49ded23d-ab47-46b0-a056-5179fa5841ba)
 
-5. Click 「Create PSD」button.
+5. Click 「Start」button.
+スタートボタンをクリックしてください
 
 
