@@ -19,19 +19,17 @@ input_dir = f"{path}/input"
 cn_lineart_dir = f"{path}/controlnet/lineart"
 lora_dir = f"{path}/lora"
 
-os.makedirs(f"{output_dir}")
-
 load_cn_model(cn_lineart_dir)
 load_cn_config(cn_lineart_dir)
 load_lora_model(lora_dir)
 
 pipe_cn = get_cn_pipeline()
-pipe_ip = get_ip_pipeline()
-
 pipe_cn.to("cuda")
+
+"""使用する場合はVRAM24GB以上を推奨
+pipe_ip = get_ip_pipeline() 
 pipe_ip.to("cuda")
-
-
+"""
 
 
 
@@ -74,13 +72,22 @@ def composite_images(image_list):
 
     return base_image
 
-def generate(reference_img, detectors, prompt, negative_prompt):
+def generate(detectors, prompt, negative_prompt, reference_img=None):
     default_pos = "bestquality, 4K, flatcolor, (sdxl-flat:1)"
     default_neg = "shadow, (worst quality, low quality:1.2), (lowres:1.2), (bad anatomy:1.2), (greyscale, monochrome:1.4)"
     prompt = default_pos + prompt 
     negative_prompt = default_neg + negative_prompt
 
-    
+
+    gen_image = pipe_cn(
+                    prompt=prompt,
+                    negative_prompt = negative_prompt,
+                    image=detectors,
+                    num_inference_steps=50,
+                    controlnet_conditioning_scale=[1.0, 0.2]
+                ).images[0]
+
+    """IPAdapterを使用する場合はVRAM24GB以上を推奨
     if reference_img is not None:
         gen_image = pipe_ip(
                     prompt=prompt,
@@ -99,6 +106,7 @@ def generate(reference_img, detectors, prompt, negative_prompt):
                     num_inference_steps=50,
                     controlnet_conditioning_scale=[1.0, 0.2]
                 ).images[0]
+    """
         
     return gen_image
 
@@ -175,7 +183,7 @@ class webui:
                 with gr.Column():
                     with gr.Row():
                         input_image = gr.Image(type="pil", image_mode="RGBA", label="lineart")
-                        reference_image = gr.Image(type="pil", image_mode="RGB", label="reference_image")
+                        #reference_image = gr.Image(type="pil", image_mode="RGB", label="reference_image") #IPAdapter使用時はコメントアウトを外す
 
                     pos_prompt = gr.Textbox(max_lines=1000, label="positive prompt")                    
                     neg_prompt = gr.Textbox(max_lines=1000, label="negative prompt")
@@ -195,7 +203,7 @@ class webui:
                 
             submit.click(
                 self.undercoat, 
-                inputs=[input_image, pos_prompt, neg_prompt, alpha_th, thickness, reference_image], 
+                inputs=[input_image, pos_prompt, neg_prompt, alpha_th, thickness], #[input_image, pos_prompt, neg_prompt, alpha_th, thickness, reference_image], 
                 outputs=[output_0, output_file]
             )
 
