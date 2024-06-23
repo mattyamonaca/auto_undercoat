@@ -10,7 +10,7 @@ def get_cn_pipeline():
         ControlNetModel.from_pretrained("mattyamonaca/controlnet_line2line_xl", torch_dtype=torch.float16)
     ]
 
-    vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix", torch_dtype=torch.float16)
+    vae = AutoencoderKL.from_pretrained("madebyollin/sdxl-vae-fp16-fix",torch_dtype=torch.float16)
     pipe = StableDiffusionXLControlNetPipeline.from_pretrained(
         "cagliostrolab/animagine-xl-3.1", controlnet=controlnets, vae=vae, torch_dtype=torch.float16
     )

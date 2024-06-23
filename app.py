@@ -24,7 +24,7 @@ load_cn_config(cn_lineart_dir)
 load_lora_model(lora_dir)
 
 pipe_cn = get_cn_pipeline()
-pipe_cn.to("cuda")
+#pipe_cn.to("cuda")
 
 """IPAdapterを使用する場合はVRAM24GB以上を推奨
 pipe_ip = get_ip_pipeline() 
@@ -133,7 +133,7 @@ class webui:
     def __init__(self):
         self.demo = gr.Blocks()
 
-    def undercoat(self, input_image, pos_prompt, neg_prompt, alpha_th, thickness, reference_img):
+    def undercoat(self, input_image, pos_prompt, neg_prompt, alpha_th, thickness, reference_img=None):
         input_image = resize_image(input_image)
         
 
@@ -147,14 +147,23 @@ class webui:
 
         detectors = get_cn_detector(input_image.resize((1024, 1024), Image.ANTIALIAS))
 
-        gen_image = generate(reference_img, detectors, pos_prompt, neg_prompt)
-        color_img, unfinished, images = process(gen_image.resize((image.shape[1], image.shape[0]), Image.ANTIALIAS) , org_line_image, alpha_th, thickness)
+        gen_image = generate(detectors, pos_prompt, neg_prompt)
+        color_img, unfinished, images, unfinished_color = process(gen_image.resize((image.shape[1], image.shape[0]), Image.ANTIALIAS) , org_line_image, alpha_th, thickness)
         
         name = randomname(10)
         os.makedirs(f"{output_dir}/{name}")
         interpolated_list = []
-        
+
+
+        print("start interpolation")
+        print(unfinished_color)
         for idx, img in enumerate(images):
+            print(img[1])
+
+            if img[1] == unfinished_color:
+                interpolated_list.append(img[0])
+                img[0].save(f"{output_dir}/{name}/area_{idx}.png")
+                continue
             interpolated_img = interpolation(img[0], img[1])
             interpolated_list.append(interpolated_img)
             interpolated_img.save(f"{output_dir}/{name}/area_{idx}.png")

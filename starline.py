@@ -142,36 +142,50 @@ def thicken_and_recolor_lines(base_image, lineart, thickness=3, new_color=(0, 0,
     
     # Convert the lineart image to OpenCV format
     lineart_cv = np.array(lineart)
+
+    # 各チャンネルを分離
+    b, g, r, a = cv2.split(lineart_cv)
     
+    # アルファ値の処理
+    new_a = np.where(a == 0, 255, 255).astype(np.uint8)
+    new_c = np.where(a == 0, 255, 0).astype(np.uint8)
+        
+    # 画像を再結合
+    lineart_cv = cv2.merge((new_c, new_c, new_c, new_a))
+    mask = cv2.inRange(lineart_cv, (0, 0, 0, 0), (0, 0, 0, 255))
+    lineart_cv[mask == 0] = [255, 255, 255, 255]
+
     white_pixels = np.sum(lineart_cv == 255)
     black_pixels = np.sum(lineart_cv == 0)
-
     
+
     lineart_gray = cv2.cvtColor(lineart_cv, cv2.COLOR_RGBA2GRAY)
+    
+    #_, lineart_gray = cv2.threshold(lineart_gray, 1, 255, cv2.THRESH_BINARY)
+    #lineart_gray = cv2.cvtColor(lineart_cv, cv2.COLOR_RGBA2GRAY)
+    
 
     if white_pixels > black_pixels:
         lineart_gray = cv2.bitwise_not(lineart_gray)
-    
-    
     # Thicken the lines using OpenCV
     kernel = np.ones((thickness, thickness), np.uint8)
     lineart_thickened = cv2.dilate(lineart_gray, kernel, iterations=1)
-    lineart_thickened = cv2.bitwise_not(lineart_thickened)
+    
+    #lineart_thickened = cv2.bitwise_not(lineart_thickened)
+    
+
     # Create a new RGBA image for the recolored lineart
     lineart_recolored = np.zeros_like(lineart_cv)
     lineart_recolored[:, :, :3] = new_color  # Set new RGB color
-
-    lineart_recolored[:, :, 3] = np.where(lineart_thickened  < 250, 255, 0)  # Blend alpha with thickened lines
+    lineart_recolored[:, :, 3] = np.where(lineart_thickened  < 250, 0, 255)  # Blend alpha with thickened lines
+   
 
     # Convert back to PIL Image
     lineart_recolored_pil = Image.fromarray(lineart_recolored, 'RGBA')
     
     # Composite the thickened and recolored lineart onto the base image
     combined_image = Image.alpha_composite(base_image, lineart_recolored_pil)
-
-    
     return combined_image
-
 
 
 def generate_distant_colors(consolidated_colors, distance_threshold):
@@ -418,64 +432,40 @@ def merge_small_labels(image, labeled_array, colors, min_pixels=20):
             colors[closest_label] = get_most_frequent_color(image, labeled_array, closest_label)
     return labeled_array
 
-def make_binary_image(image):
-    # ピクセルデータの取得
-    pixels = image.load()
-
-    # 画像のサイズ取得
-    width, height = image.size
-
-    # ピクセルごとに処理
-    for y in range(height):
-        for x in range(width):
-            r, g, b, a = pixels[x, y]
-
-            # アルファ値の処理
-            if a == 0:
-                new_a = 0
-            else:
-                new_a = 255
-
-            # RGBを黒に設定
-            new_r, new_g, new_b = 0, 0, 0
-
-            # 新しいピクセルの値を設定
-            pixels[x, y] = (new_r, new_g, new_b, new_a)
-    return image
-
-
 def process(image, lineart, alpha_th, thickness):
     org = image
-    lineart = make_binary_image(lineart.copy())
-    
-    major_colors = get_major_colors(image, threshold_percentage=0.05)
-    major_colors = consolidate_colors(major_colors, 10)
-    new_color_1 = generate_distant_colors(major_colors, 100)
-    image = thicken_and_recolor_lines(org, lineart, thickness=thickness, new_color=new_color_1)
-    tmp = get_binary_image(image, new_color_1)
-    binary_image = binarize_image(tmp)
-    labeled_array, num_features = find_contours(binary_image)
+    major_colors = get_major_colors(image, threshold_percentage=0.05) #主要な色を取得
+    major_colors = consolidate_colors(major_colors, 10) #主要な色のうち、近しい色を統合
+    new_color_1 = generate_distant_colors(major_colors, 100) #修正領域を表す色を生成
+    image = thicken_and_recolor_lines(org, lineart, thickness=thickness, new_color=new_color_1) #線を太くして元画像に貼り付け
+    tmp = get_binary_image(image, new_color_1) #太くした線のみを抽出
+    binary_image = binarize_image(tmp) #太くした線のみを抽出
+    labeled_array, num_features = find_contours(binary_image) #閉域を検出
+    print(f"num features: {num_features}")
 
+    #検出した閉域の最頻色を取得
     colors = {label_id: get_most_frequent_color(image, labeled_array, label_id)
         for label_id in range(1, num_features + 1)}
 
-    unique_labels, counts = np.unique(labeled_array, return_counts=True)
-    labeled_array = merge_small_labels(image, labeled_array, colors, 1000)
-    unique_labels, counts = np.unique(labeled_array, return_counts=True)
-
-    merged_labeled_array, merged_num_features = merge_similar_labels(labeled_array, colors, 10)    
-    flat_image = fill_contours_with_color(image.copy(), merged_labeled_array, merged_num_features)
-    flat_image.save("tmp_flat.png")
-    major_colors.append((new_color_1, 0))
-    new_color_2 = generate_distant_colors(major_colors, 100)
+    #unique_labels, counts = np.unique(labeled_array, return_counts=True)
+    labeled_array = merge_small_labels(image, labeled_array, colors, 1000) #ピクセル数が少ない領域を統合
     
+    #unique_labels, counts = np.unique(labeled_array, return_counts=True)
+
+    merged_labeled_array, merged_num_features = merge_similar_labels(labeled_array, colors, 10) #色が近い領域を統合
+
+    flat_image = fill_contours_with_color(image.copy(), merged_labeled_array, merged_num_features) #閉域を最頻色で塗りつぶし
+    major_colors.append((new_color_1, 0))
+
+    #以下Starlineと同様の処理
+    new_color_2 = generate_distant_colors(major_colors, 100)
     image, alpha_np = recolor_lineart_and_composite(lineart, flat_image, new_color_2, alpha_th)
     
     image = replace_color(image, new_color_1, new_color_2, alpha_np)
     images = extract_and_isolate_colors(image)
     unfinished = modify_transparency(image, new_color_1)
 
-    return image, unfinished, images
+    return image, unfinished, images, new_color_1
 """
 lineart = Image.open("./output/P4eqJpIBVS/line_image.png")
 image = Image.open("./output/P4eqJpIBVS/color_image.png")
