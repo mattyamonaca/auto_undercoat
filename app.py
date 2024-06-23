@@ -24,7 +24,7 @@ load_cn_config(cn_lineart_dir)
 load_lora_model(lora_dir)
 
 pipe_cn = get_cn_pipeline()
-#pipe_cn.to("cuda")
+pipe_cn.to("cuda")
 
 """IPAdapterを使用する場合はVRAM24GB以上を推奨
 pipe_ip = get_ip_pipeline() 
