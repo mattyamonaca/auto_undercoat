@@ -11,7 +11,7 @@ auto_undercoatは、入力された線画に対してフラットな色付け（
 
 # Installation
 ```
-git clone https://github.com/wasanbonplan/auto_undercoat_proto.git
+git clone https://github.com/mattyamonaca/auto_undercoat.git
 cd starline
 conda create -n auto_undercoat python=3.10
 conda activate auto_undercoat
