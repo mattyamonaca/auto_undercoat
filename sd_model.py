@@ -15,7 +15,7 @@ def get_cn_pipeline():
         "cagliostrolab/animagine-xl-3.1", controlnet=controlnets, vae=vae, torch_dtype=torch.float16
     )
 
-    pipe.enable_model_cpu_offload()
+    #pipe.enable_model_cpu_offload()
 
     pipe.load_lora_weights("./lora/", weight_name="sdxl-flat.safetensors")
 
